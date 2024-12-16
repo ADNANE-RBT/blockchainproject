@@ -2,7 +2,8 @@ from web3 import Web3
 from eth_account import Account
 import json
 from tkinter import messagebox
-
+current_user_address = None
+current_user_private_key = None
 class Web3Helper:
     def __init__(self):
         # Connect to local blockchain
@@ -23,7 +24,6 @@ class Web3Helper:
         self.patient_contract_address = patient_contract_json['address']
         self.audit_contract_address = audit_contract_json['address']
         self.EMR_storage_contract_address = EMR_storage_contract_json['address']
-        
         # Create contract instances
         self.doctor_contract = self.w3.eth.contract(
             address=self.doctor_contract_address,
@@ -45,6 +45,7 @@ class Web3Helper:
     def create_account(self, password):
         """Create a new Ethereum account"""
         account = Account.create()
+        print(password)
         encrypted = Account.encrypt(account.key, password)
         return {
             'address': account.address,
@@ -55,15 +56,24 @@ class Web3Helper:
         account = Account.from_key(private_key)
         return account.address == Web3.to_checksum_address(expected_address)
     def login_doctor(self, private_key, address):
+        global current_user_address
+        global current_user_private_key
         """Login verification for doctors"""
         try:
             if not self.verify_address_with_private_key(private_key, address):
                 return False, "Private key does not match the address"
             is_registered = self.doctor_contract.functions.isRegisteredDoctor(address).call()
+            current_user_address = address
+            current_user_private_key = private_key
             return is_registered, "Login successful" if is_registered else "Address not registered as a doctor"
         except Exception as e:
             return False, str(e)
-
+    def get_current_user_adress(self):
+        return current_user_address
+    
+    def get_current_private_key(self):
+        return current_user_private_key
+    
     def login_patient(self, private_key, address):
         """Login verification for patients"""
         try:
@@ -73,6 +83,8 @@ class Web3Helper:
 
             # Check if the address is registered as a patient
             is_registered = self.patient_contract.functions.isPatientRegistered(address).call()
+            current_user_address = address
+            current_user_private_key = private_key
             return is_registered, "Login successful" if is_registered else "Address not registered as a patient"
         except Exception as e:
             return False, str(e)
@@ -145,8 +157,30 @@ class Web3Helper:
         except Exception as e:
             return False, f"Registration failed: {str(e)}"
     def register_patient(self, doctor_private_key, doctor_address, patient_data):
-        """Register a new patient on the blockchain"""
+        """
+        Register a new patient on the blockchain
+        
+        Args:
+            doctor_private_key (str): Private key of the registering doctor
+            doctor_address (str): Wallet address of the registering doctor
+            patient_data (dict): Dictionary containing patient registration details
+        
+        Returns:
+            tuple: (success_bool, message_str)
+        """
         try:
+            # Validate required fields
+            required_fields = [
+                'wallet_address', 'first_name', 'last_name', 'date_of_birth', 
+                'gender', 'place_of_birth', 'cin', 'phone_number', 
+                'emergency_contact', 'medical_record_id'
+            ]
+            
+            # Check that all required fields are present and not empty
+            for field in required_fields:
+                if field not in patient_data or not str(patient_data[field]).strip():
+                    return False, f"Missing or empty required field: {field}"
+
             # Ensure the doctor's address matches their private key
             account = Account.from_key(doctor_private_key)
             if account.address.lower() != doctor_address.lower():
@@ -156,25 +190,24 @@ class Web3Helper:
             is_doctor = self.doctor_contract.functions.isRegisteredDoctor(doctor_address).call()
             if not is_doctor:
                 return False, "Only registered doctors can add patients"
-                
+            
+            # Create the patient input struct
+            patient_input = {
+                'patientAddress': Web3.to_checksum_address(patient_data['wallet_address']),
+                'firstName': str(patient_data['first_name']),
+                'lastName': str(patient_data['last_name']),
+                'dateOfBirth': str(patient_data['date_of_birth']),
+                'gender': str(patient_data['gender']),
+                'placeOfBirth': str(patient_data['place_of_birth']),
+                'CIN': str(patient_data['cin']),
+                'phoneNumber': str(patient_data['phone_number']),
+                'emergencyContact': str(patient_data['emergency_contact']),
+                'medicalRecordID': str(patient_data['medical_record_id'])
+            }
             # Build the transaction
             nonce = self.w3.eth.get_transaction_count(doctor_address)
             gas_price = self.w3.eth.gas_price
             chain_id = self.w3.eth.chain_id
-            
-            # Create the patient input struct
-            patient_input = {
-                'patientAddress': patient_data['wallet_address'],
-                'firstName': patient_data['first_name'],
-                'lastName': patient_data['last_name'],
-                'dateOfBirth': patient_data['date_of_birth'],
-                'gender': patient_data['gender'],
-                'placeOfBirth': patient_data['place_of_birth'],
-                'CIN': patient_data['cin'],
-                'phoneNumber': patient_data['phone_number'],
-                'emergencyContact': patient_data.get('emergency_contact', ''), 
-                'medicalRecordID': patient_data.get('medical_record_id', '')  
-            }
             
             # Get the contract function
             contract_function = self.patient_contract.functions.registerPatient(patient_input)
@@ -205,8 +238,8 @@ class Web3Helper:
                 return True, f"Patient registration successful! Transaction hash: {tx_hash.hex()}"
             else:
                 return False, "Transaction failed during execution"
-                
+        
         except ValueError as ve:
             return False, f"Invalid input: {str(ve)}"
         except Exception as e:
-            return False, f"Registration failed: {str(e)}"
+            return False, f"Patient registration failed: {str(e)}"

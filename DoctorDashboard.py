@@ -1,8 +1,9 @@
+from tkinter import messagebox
 from customtkinter import *
 from PIL import Image
 import tkinter
 from tkinter import StringVar
-
+from Web3Helper import Web3Helper
 
 def create_home_frame(main_view):
     # Clear the previous view
@@ -348,6 +349,28 @@ def create_addpatient_frame(main_view):
     )
     pnumber_entry.place(relx=0.10, rely=0.49)
 
+    emergencynumber_label = CTkLabel(
+        master=main_view,
+        text=" Emergency Contact:",
+        text_color="#0080FF",
+        anchor="w",
+        justify="left",
+        font=("Arial Bold", 14),
+        image=phone_icon,
+        compound="left",
+    )
+    emergencynumber_label.place(relx=0.50, rely=0.45)
+
+    emergencynumber_entry = CTkEntry(
+        master=main_view,
+        width=300,
+        fg_color="#EEEEEE",
+        border_color="#0080FF",
+        border_width=1,
+        text_color="#000000",
+    )
+    emergencynumber_entry.place(relx=0.50, rely=0.49)
+
     sexe_label = CTkLabel(
         master=main_view,
         text=" Sexe:",
@@ -358,13 +381,13 @@ def create_addpatient_frame(main_view):
         image=sexe_icon,
         compound="left",
     )
-    sexe_label.place(relx=0.50, rely=0.45)
+    sexe_label.place(relx=0.50, rely=0.55)
 
     optionmenu = CTkComboBox(main_view, values=["Male", "Female"],
                                          width=150,button_color="#0080FF", border_color="#0080FF", border_width=2, button_hover_color="#207244",
                 dropdown_hover_color="#E44982", dropdown_fg_color="#0080FF", dropdown_text_color="#fff")
     
-    optionmenu.place(relx=0.50, rely=0.49)
+    optionmenu.place(relx=0.50, rely=0.59)
 
     cin_label = CTkLabel(
         master=main_view,
@@ -376,7 +399,7 @@ def create_addpatient_frame(main_view):
         image=cin_icon,
         compound="left",
     )
-    cin_label.place(relx=0.70, rely=0.45)
+    cin_label.place(relx=0.70, rely=0.55)
 
     cin_entry = CTkEntry(
         master=main_view,
@@ -386,7 +409,7 @@ def create_addpatient_frame(main_view):
         border_width=1,
         text_color="#000000",
     )
-    cin_entry.place(relx=0.70, rely=0.49)
+    cin_entry.place(relx=0.70, rely=0.59)
 
     wa_label = CTkLabel(
         master=main_view,
@@ -410,6 +433,28 @@ def create_addpatient_frame(main_view):
     )
     wa_entry.place(relx=0.10, rely=0.59)
 
+    mrid_label = CTkLabel(
+        master=main_view,
+        text=" Medical Record ID:",
+        text_color="#0080FF",
+        anchor="w",
+        justify="left",
+        font=("Arial Bold", 14),
+        image=id_icon,
+        compound="left",
+    )
+    mrid_label.place(relx=0.3, rely=0.65)
+
+    mrid_entry = CTkEntry(
+        master=main_view,
+        width=300,
+        fg_color="#EEEEEE",
+        border_color="#0080FF",
+        border_width=1,
+        text_color="#000000",
+    )
+    mrid_entry.place(relx=0.3, rely=0.69)
+
 
     pass_label = CTkLabel(
         master=main_view,
@@ -421,7 +466,7 @@ def create_addpatient_frame(main_view):
         image=password_icon,
         compound="left",
     )
-    pass_label.place(relx=0.10, rely=0.65)
+    pass_label.place(relx=0.10, rely=0.75)
 
     pass_entry = CTkEntry(
         master=main_view,
@@ -432,7 +477,7 @@ def create_addpatient_frame(main_view):
         text_color="#000000",
         show="*",
     )
-    pass_entry.place(relx=0.10, rely=0.69)
+    pass_entry.place(relx=0.10, rely=0.79)
 
     confpass_label = CTkLabel(
         master=main_view,
@@ -444,7 +489,7 @@ def create_addpatient_frame(main_view):
         image=password_icon,
         compound="left",
     )
-    confpass_label.place(relx=0.50, rely=0.65)
+    confpass_label.place(relx=0.50, rely=0.75)
 
     confpass_entry = CTkEntry(
         master=main_view,
@@ -455,14 +500,108 @@ def create_addpatient_frame(main_view):
         text_color="#000000",
         show="*",
     )
-    confpass_entry.place(relx=0.50, rely=0.69)
+    confpass_entry.place(relx=0.50, rely=0.79)
+    def validate_and_register_patient():
+        web3_helper = Web3Helper()
+        # Collect all input values
+        patient_data = {
+            'wallet_address': wa_entry.get().strip(),
+            'first_name': fn_entry.get().strip(),
+            'last_name': ln_entry.get().strip(),
+            'date_of_birth': bd_entry.get().strip(),
+            'gender': optionmenu.get(),
+            'place_of_birth': pob_entry.get().strip(),
+            'cin': cin_entry.get().strip(),
+            'phone_number': pnumber_entry.get().strip(),
+            'emergency_contact': emergencynumber_entry.get().strip(),
+            'medical_record_id': mrid_entry.get().strip()
+        }
 
+        # Password validation
+        password = pass_entry.get()
+        print(password)
+        confirm_password = confpass_entry.get()
+
+        # Comprehensive validation
+        error_messages = []
+
+        # Check password match
+        if password != confirm_password:
+            error_messages.append("Passwords do not match")
+
+        # Check password strength (optional, but recommended)
+        if len(password) < 8:
+            error_messages.append("Password must be at least 8 characters long")
+
+        # Validate required fields
+        required_fields = [
+            ('Wallet Address', 'wallet_address'),
+            ('First Name', 'first_name'),
+            ('Last Name', 'last_name'),
+            ('Date of Birth', 'date_of_birth'),
+            ('Gender', 'gender'),
+            ('Place of Birth', 'place_of_birth'),
+            ('CIN', 'cin'),
+            ('Phone Number', 'phone_number'),
+            ('Emergency Contact', 'emergency_contact'),
+            ('Medical Record ID', 'medical_record_id')
+        ]
+
+        for field_name, field_key in required_fields:
+            if not patient_data[field_key]:
+                error_messages.append(f"{field_name} cannot be empty")
+
+        # Display errors if any
+        if error_messages:
+            messagebox.showerror("Validation Error", "\n".join(error_messages))
+            return
+
+        # Attempt patient registration
+        try:
+            print(password)
+            print(len(password))
+            patient_wallet = web3_helper.create_account(password)
+            
+            # Update wallet address with the newly created address
+            patient_data['wallet_address'] = patient_wallet['address']
+            print(web3_helper.get_current_user_adress())
+            print(web3_helper.get_current_private_key())
+            print("Private Key:", web3_helper.get_current_private_key())
+            print("Length:", len(web3_helper.get_current_private_key()))
+
+            print(patient_data)
+            # Register patient
+            success, message = web3_helper.register_patient(
+                web3_helper.get_current_private_key(), 
+                web3_helper.get_current_user_adress(), 
+                patient_data
+            )
+
+            if success:
+                # Show success message
+                messagebox.showinfo("Registration Successful", message)
+            
+                
+                # Switch back to main view or patient list
+                switch_mainframe_view("Client", main_view)
+            else:
+                # Show error message
+                messagebox.showerror("Registration Failed", message)
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
     CTkButton(master=main_view, text="Back", width=300, fg_color="transparent", font=("Arial Bold", 17), border_color="#0080FF", hover_color="#eee", border_width=2, text_color="#0080FF", command=lambda: switch_mainframe_view("Client", main_view)) \
-        .place(relx=0.10, rely=0.79)
-    CTkButton(master=main_view, text="Create", width=300, font=("Arial Bold", 17), hover_color="#E44982", fg_color="#0080FF", text_color="#fff") \
-        .place(relx=0.50, rely=0.79)
-
-
+        .place(relx=0.10, rely=0.89)
+    CTkButton(
+        master=main_view, 
+        text="Create", 
+        width=300, 
+        font=("Arial Bold", 17), 
+        hover_color="#E44982", 
+        fg_color="#0080FF", 
+        text_color="#fff",
+        command=validate_and_register_patient
+    ).place(relx=0.50, rely=0.89)
 def create_Consult_frame(main_view):
     # Clear the previous view
     for widget in main_view.winfo_children():

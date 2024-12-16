@@ -12,11 +12,11 @@ web3_helper = Web3Helper()
 
 # Global variable to store current user's address
 current_user_address = None
-
+current_user_private_key = None
 def login_user(address, password, app, main_frame, user_type="doctor"):
     """Handle user login with Web3 integration"""
     global current_user_address
-    
+    global current_user_private_key
     if not address or not password:
         messagebox.showerror("Error", "Please fill in all fields")
         return
@@ -30,6 +30,7 @@ def login_user(address, password, app, main_frame, user_type="doctor"):
             success, message = web3_helper.login_doctor(password, address)
             if success:
                 current_user_address = address
+                current_user_private_key = password
                 # Get doctor details from contract
                 doctor_details = web3_helper.get_doctor_details(address)
                 # Store details if needed for dashboard
@@ -40,6 +41,7 @@ def login_user(address, password, app, main_frame, user_type="doctor"):
             success, message = web3_helper.login_patient(password, address)
             if success:
                 current_user_address = address
+                current_user_private_key = password
                 # Get patient details from contract
                 patient_details = web3_helper.get_patient_details(address)
                 # Store details if needed for dashboard
