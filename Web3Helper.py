@@ -75,6 +75,8 @@ class Web3Helper:
         return current_user_private_key
     
     def login_patient(self, private_key, address):
+        global current_user_address
+        global current_user_private_key
         """Login verification for patients"""
         try:
             # Verify if the private key matches the provided address

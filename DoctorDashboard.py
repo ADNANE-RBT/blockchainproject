@@ -560,10 +560,10 @@ def create_addpatient_frame(main_view):
         try:
             print(password)
             print(len(password))
-            patient_wallet = web3_helper.create_account(password)
             
+            print(patient_data['wallet_address'])
             # Update wallet address with the newly created address
-            patient_data['wallet_address'] = patient_wallet['address']
+            
             print(web3_helper.get_current_user_adress())
             print(web3_helper.get_current_private_key())
             print("Private Key:", web3_helper.get_current_private_key())

@@ -336,43 +336,7 @@ def create_patient_login_view(frame, main_frame):
     )
     login_button.place(x=160, y=470)
 
-    # Register section
-    register_label = CTkLabel(
-        master=frame,
-        text="Don't have an account yet?",
-        text_color="#7E7E7E",
-        anchor="w",
-        justify="left",
-        font=("Arial Bold", 12)
-    )
-    register_label.place(x=200, y=510)
 
-    register_link = CTkLabel(
-        master=frame,
-        text="Register",
-        text_color="#0080FF",
-        anchor="w",
-        justify="left",
-        font=("Arial Bold", 12, "underline"),
-        cursor="hand2"
-    )
-    register_link.place(x=360, y=510)
-
-    def on_hover(event):
-        register_link.configure(
-            text_color="#601E88",
-            font=("Arial Bold", 12, "underline")
-        )
-
-    def on_leave(event):
-        register_link.configure(
-            text_color="#0080FF",
-            font=("Arial Bold", 12, "underline")
-        )
-
-    register_link.bind("<Button-1>", lambda event: switch_to_register(app, main_frame))
-    register_link.bind("<Enter>", on_hover)
-    register_link.bind("<Leave>", on_leave)
 
 def create_login_frame(app):
     """Create the main login frame"""
