@@ -609,6 +609,10 @@ def create_Consult_frame(main_view):
 
     from tkinter import StringVar, Text
     from PIL import Image
+    from Web3Helper import Web3Helper  # Import the Web3Helper class
+
+    # Web3Helper instance
+    web3_helper = Web3Helper()
 
     # Icons
     back_icon_data = Image.open("Images/back-arrow.png")
@@ -630,7 +634,10 @@ def create_Consult_frame(main_view):
     edit_button = CTkButton(master=title_frame, text="Edit", font=("Arial Black", 15), text_color="#fff", fg_color="#0080FF", 
                              hover_color="#E44982", width=120, image=edit_icon, height=40)
     edit_button.place(x=700, y=0)
-
+    create_mr_button = CTkButton(master=title_frame, text="Create Record", font=("Arial Black", 15), text_color="#fff", fg_color="#0080FF", 
+                                hover_color="#E44982", width=120, height=40,
+                                command=lambda: create_medical_record_frame(main_view))
+    create_mr_button.place(x=560, y=0)
     # Scrollable Frame
     patientsframe = CTkScrollableFrame(master=main_view, fg_color="#F8F9FA", width=825, height=650, corner_radius=10)
     patientsframe.place(x=27, y=115)
@@ -638,21 +645,22 @@ def create_Consult_frame(main_view):
     for col in range(4):  # 4 columns for Full Name, Age, Status, Action
         patientsframe.grid_columnconfigure(col, weight=1)
 
-
-    # Patient Medical Record Data
+    # Dynamic medical record data
+    medical_record_id = "MR123456"  # Example ID; replace with dynamic input
+    current_record = web3_helper.view_medical_record(medical_record_id, web3_helper.get_current_user_adress())
     patient_data = {
-        "Full Name": StringVar(value="John Doe"),
-        "Date of Birth": StringVar(value="1990-05-14"),
-        "Place of Birth": StringVar(value="New York, USA"),
-        "Description": StringVar(value="Patient suffers from seasonal allergies."),
-        "Weight": StringVar(value="70 kg"),
-        "Height": StringVar(value="175 cm"),
-        "Medical Record ID": StringVar(value="MR123456"),
-        "Medical Insurance": StringVar(value="Yes"),
-        "Status": StringVar(value="Active"),
-        "Active Problems": StringVar(value="Hypertension, Seasonal Allergies"),
-        "Allergies": StringVar(value="Peanuts, Pollen"),
-        "Medications": StringVar(value="Lisinopril, Cetirizine")
+        "Full Name": StringVar(value=f"{current_record['firstName']} {current_record['lastName']}"),
+        "Date of Birth": StringVar(value=current_record['dateOfBirth']),
+        "Place of Birth": StringVar(value=current_record['placeOfBirth']),
+        "Description": StringVar(value=current_record['description']),
+        "Weight": StringVar(value="N/A"),  # Add if available in contract
+        "Height": StringVar(value="N/A"),  # Add if available in contract
+        "Medical Record ID": StringVar(value=current_record['medicalRecordID']),
+        "Medical Insurance": StringVar(value="N/A"),  # Add if available in contract
+        "Status": StringVar(value="Active"),  # Example field
+        "Active Problems": StringVar(value=", ".join(current_record['activeProblemList'])),
+        "Allergies": StringVar(value=", ".join(current_record['allergies'])),
+        "Medications": StringVar(value=", ".join(current_record['medications'])),
     }
 
     def display_record(editable=False):
@@ -661,25 +669,24 @@ def create_Consult_frame(main_view):
 
         row = 0
         for key, value_var in patient_data.items():
-            # Create a bordered section for each field
             section_frame = CTkFrame(master=patientsframe, fg_color="#FFFFFF", corner_radius=10, width=780, height=50)
-            section_frame.grid(row=row, column=0, columnspan=4 ,padx=10, pady=5, sticky="nsew")
+            section_frame.grid(row=row, column=0, columnspan=4, padx=10, pady=5, sticky="nsew")
             section_frame.grid_columnconfigure(1, weight=1)
 
             label = CTkLabel(master=section_frame, text=f"{key}:", font=("Arial Bold", 15), text_color="#0080FF")
             label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
             if editable:
-                    entry = CTkEntry(master=section_frame, fg_color="#FFF", font=("Arial", 14), textvariable=value_var)
-                    entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+                entry = CTkEntry(master=section_frame, fg_color="#FFF", font=("Arial", 14), textvariable=value_var)
+                entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
             else:
-                    value_label = CTkLabel(master=section_frame, text=value_var.get(), font=("Arial", 14), text_color="#000")
-                    value_label.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+                value_label = CTkLabel(master=section_frame, text=value_var.get(), font=("Arial", 14), text_color="#000")
+                value_label.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
             row += 1
 
         if editable:
-            # Add Save and Cancel Buttons at the bottom
+            # Add Save and Cancel Buttons
             button_frame = CTkFrame(master=patientsframe, fg_color="#FFFFFF", corner_radius=10)
             button_frame.grid(row=row, column=2, padx=10, pady=10, sticky="w")
 
@@ -689,13 +696,29 @@ def create_Consult_frame(main_view):
             save_button = CTkButton(master=button_frame, text="Save", font=("Arial Bold", 17), hover_color="#E44982", fg_color="#0080FF", text_color="#fff", command=save_record)
             save_button.pack(side="left", padx=10, pady=10)
 
-
-
     def save_record():
-        print("Saving the updated record:")
-        for key, value_var in patient_data.items():
-            print(f"{key}: {value_var.get()}")
-        display_record(editable=False)
+        updated_data = {
+            "medicalRecordID": patient_data["Medical Record ID"].get(),
+            "description": patient_data["Description"].get(),
+            "activeProblemList": patient_data["Active Problems"].get().split(", "),
+            "medications": patient_data["Medications"].get().split(", "),
+            "allergies": patient_data["Allergies"].get().split(", "),
+            "lastVisitDate": "N/A",  # Add if available
+            "lastDoctorVisited": "N/A",  # Add if available
+            "upcomingVisitDate": "N/A",  # Add if available
+            "upcomingDoctorVisit": "N/A",  # Add if available
+        }
+        success, message = web3_helper.edit_medical_record(
+            web3_helper.get_current_private_key(),
+            web3_helper.get_current_user_adress(),
+            updated_data["medicalRecordID"],
+            updated_data,
+        )
+        if success:
+            messagebox.showinfo("Success", "Medical record updated successfully!")
+            display_record(editable=False)
+        else:
+            messagebox.showerror("Error", f"Failed to update record: {message}")
 
     def cancel_edit():
         display_record(editable=False)
@@ -707,6 +730,7 @@ def create_Consult_frame(main_view):
 
     # Initially display the record in read-only mode
     display_record(editable=False)
+
 
 
 
@@ -804,6 +828,114 @@ def create_doctordash_frame(app, current_frame):
 
 
     return frame
+
+def create_medical_record_frame(main_view):
+    # Clear the previous view
+    for widget in main_view.winfo_children():
+        widget.destroy()
+    
+    # Icons
+    back_icon_data = Image.open("Images/back-arrow.png")
+    back_icon = CTkImage(dark_image=back_icon_data, light_image=back_icon_data, size=(20, 20))
+    
+    # Title Frame
+    title_frame = CTkFrame(master=main_view, fg_color="transparent", width=846, height=50)
+    title_frame.place(x=27, y=29)
+    CTkLabel(master=title_frame, text="Create Medical Record", font=("Arial Black", 25), text_color="#0080FF").place(relx=0.37, rely=0)
+    CTkButton(master=title_frame, text="Back", font=("Arial Black", 15), text_color="#fff", fg_color="#0080FF", 
+              hover_color="#E44982", width=120, image=back_icon, height=40, 
+              command=lambda: switch_mainframe_view("Client", main_view)).place(x=27, y=0)
+    
+    # Scrollable Frame
+    record_frame = CTkScrollableFrame(master=main_view, fg_color="#F8F9FA", width=825, height=580, corner_radius=10)
+    record_frame.place(x=27, y=115)
+    
+    # Medical Record Fields
+    fields = [
+        ("Medical Record ID", "medical_record_id"),
+        ("Patient Address", "patient_address"),
+        ("Description", "description"),
+        ("Active Problem List", "active_problem_list"),
+        ("Medications", "medications"),
+        ("Allergies", "allergies"),
+        ("Last Visit Date", "last_visit_date"),
+        ("Last Doctor Visited", "last_doctor_visited"),
+        ("Upcoming Visit Date", "upcoming_visit_date"),
+        ("Upcoming Doctor Visit", "upcoming_doctor_visit")
+    ]
+    
+    def submit_medical_record():
+        web3_helper = Web3Helper()
+        # Collect medical record data
+        medical_record = {}
+        for _, key in fields:
+            entry_widget = record_data.get(key)
+            if entry_widget:
+                if isinstance(entry_widget, CTkTextbox):  # Check if it's a CTkTextbox
+                    medical_record[key] = entry_widget.get("1.0", "end").strip()  # Get all text and strip extra whitespace
+                else:
+                    medical_record[key] = entry_widget.get().strip()  # For CTkEntry
+        
+        try:
+            # Assuming you have these values from the current session/login
+            private_key = web3_helper.get_current_private_key()
+            doctor_address = web3_helper.get_current_user_adress()  # You'll need to implement this
+            
+            # Call the blockchain method to create medical record
+            success, message = web3_helper.create_medical_record(
+                private_key, 
+                doctor_address, 
+                medical_record
+            )
+            
+            if success:
+                messagebox.showinfo("Success", message)
+                switch_mainframe_view("Client", main_view)
+            else:
+                messagebox.showerror("Error", message)
+        
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred: {str(e)}")
+
+    
+    record_data = {}
+    for i, (label, key) in enumerate(fields):
+        # Create a section frame for each field
+        section_frame = CTkFrame(master=record_frame, fg_color="#FFFFFF", corner_radius=10, width=780)
+        section_frame.grid(row=i, column=0, padx=10, pady=5, sticky="nsew")
+        section_frame.grid_columnconfigure(1, weight=1)
+        
+        # Label
+        CTkLabel(master=section_frame, text=f"{label}:", font=("Arial Bold", 15), text_color="#0080FF").grid(
+            row=0, column=0, padx=10, pady=10, sticky="w")
+        
+        # Entry widget
+        if key in ["description", "active_problem_list", "medications", "allergies"]:
+            entry = CTkTextbox(master=section_frame, height=100, width=500, fg_color="#FFFFFF", 
+                               border_color="black", text_color="black", border_width=2)
+        elif key in ["last_visit_date", "upcoming_visit_date"]:
+            entry = CTkEntry(master=section_frame, placeholder_text="YYYY-MM-DD", fg_color="#FFFFFF", 
+                             border_color="black", text_color="black", border_width=2)
+        else:
+            entry = CTkEntry(master=section_frame, width=500, fg_color="#FFFFFF", 
+                             border_color="black", text_color="black", border_width=2)
+        
+        entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+        record_data[key] = entry
+    
+    # Fixed Submit Button
+    submit_button = CTkButton(
+        master=main_view, 
+        text="Create Medical Record", 
+        width=300, 
+        font=("Arial Bold", 17), 
+        hover_color="#E44982", 
+        fg_color="#0080FF", 
+        text_color="#fff",
+        command=submit_medical_record
+    )
+    submit_button.place(relx=0.5, rely=0.95, anchor="center")  # Fixed at the bottom
+
 
 
 
