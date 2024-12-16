@@ -1,7 +1,10 @@
+from tkinter import messagebox
 from customtkinter import *
 from PIL import Image
 import tkinter
 from tkinter import StringVar
+from Web3Helper import Web3Helper
+from Login_modified import current_user_address  
 
 
 def create_home_frame(main_view):
@@ -151,13 +154,6 @@ def create_Client_frame(main_view):
      CTkLabel(row_frame, text=patient["status"], font=row_font, anchor="center", width=column_widths[2]).grid(
         row=0, column=2, padx=5, pady=10, sticky="w"
     )
-     CTkButton(
-        row_frame,
-        text="Consult",
-        font=row_font,
-        width=column_widths[3],
-        command=lambda: create_Consult_frame(main_view),
-     ).grid(row=0, column=3, padx=5, pady=10, sticky="w")
 
     
 
@@ -459,8 +455,56 @@ def create_addpatient_frame(main_view):
 
     CTkButton(master=main_view, text="Back", width=300, fg_color="transparent", font=("Arial Bold", 17), border_color="#0080FF", hover_color="#eee", border_width=2, text_color="#0080FF", command=lambda: switch_mainframe_view("Client", main_view)) \
         .place(relx=0.10, rely=0.79)
-    CTkButton(master=main_view, text="Create", width=300, font=("Arial Bold", 17), hover_color="#E44982", fg_color="#0080FF", text_color="#fff") \
-        .place(relx=0.50, rely=0.79)
+    def register_patient_handler():
+        # Validate inputs
+        if not all([fn_entry.get(), ln_entry.get(), bd_entry.get(), 
+                   pob_entry.get(), pnumber_entry.get(), optionmenu.get(),
+                   cin_entry.get(), wa_entry.get()]):
+            messagebox.showerror("Error", "All fields are required!")
+            return
+            
+        if pass_entry.get() != confpass_entry.get():
+            messagebox.showerror("Error", "Passwords do not match!")
+            return
+
+        # Prepare patient data
+        patient_data = {
+            'wallet_address': wa_entry.get(),
+            'first_name': fn_entry.get(),
+            'last_name': ln_entry.get(),
+            'date_of_birth': bd_entry.get(),
+            'gender': optionmenu.get(),
+            'place_of_birth': pob_entry.get(),
+            'cin': cin_entry.get(),
+            'phone_number': pnumber_entry.get(),
+            'emergency_contact': '',  
+            'medical_record_id': ''   
+        }
+
+        # Call the register_patient function
+        success, message = Web3Helper.register_patient(
+            doctor_private_key,
+            doctor_address,
+            patient_data
+        )
+
+        if success:
+            messagebox.showinfo("Success", message)
+            switch_mainframe_view("Client", main_view)  # Return to main view
+        else:
+            messagebox.showerror("Error", message)
+
+    # Update the Create button to use the handler from within the same scope
+    CTkButton(
+        master=main_view, 
+        text="Create", 
+        width=300, 
+        font=("Arial Bold", 17), 
+        hover_color="#E44982", 
+        fg_color="#0080FF", 
+        text_color="#fff",
+        command=register_patient_handler
+    ).place(relx=0.50, rely=0.79)
 
 
 def create_Consult_frame(main_view):

@@ -144,3 +144,69 @@ class Web3Helper:
             return False, f"Invalid input: {str(ve)}"
         except Exception as e:
             return False, f"Registration failed: {str(e)}"
+    def register_patient(self, doctor_private_key, doctor_address, patient_data):
+        """Register a new patient on the blockchain"""
+        try:
+            # Ensure the doctor's address matches their private key
+            account = Account.from_key(doctor_private_key)
+            if account.address.lower() != doctor_address.lower():
+                return False, "Private key does not match doctor's wallet address"
+            
+            # Check if the doctor is registered
+            is_doctor = self.doctor_contract.functions.isRegisteredDoctor(doctor_address).call()
+            if not is_doctor:
+                return False, "Only registered doctors can add patients"
+                
+            # Build the transaction
+            nonce = self.w3.eth.get_transaction_count(doctor_address)
+            gas_price = self.w3.eth.gas_price
+            chain_id = self.w3.eth.chain_id
+            
+            # Create the patient input struct
+            patient_input = {
+                'patientAddress': patient_data['wallet_address'],
+                'firstName': patient_data['first_name'],
+                'lastName': patient_data['last_name'],
+                'dateOfBirth': patient_data['date_of_birth'],
+                'gender': patient_data['gender'],
+                'placeOfBirth': patient_data['place_of_birth'],
+                'CIN': patient_data['cin'],
+                'phoneNumber': patient_data['phone_number'],
+                'emergencyContact': patient_data.get('emergency_contact', ''), 
+                'medicalRecordID': patient_data.get('medical_record_id', '')  
+            }
+            
+            # Get the contract function
+            contract_function = self.patient_contract.functions.registerPatient(patient_input)
+            
+            # Estimate gas
+            gas_estimate = contract_function.estimate_gas({'from': doctor_address})
+            
+            # Build transaction
+            transaction = contract_function.build_transaction({
+                'chainId': chain_id,
+                'from': doctor_address,
+                'gas': gas_estimate,
+                'nonce': nonce,
+                'maxFeePerGas': self.w3.eth.max_priority_fee + gas_price,
+                'maxPriorityFeePerGas': self.w3.eth.max_priority_fee,
+            })
+            
+            # Sign and send transaction
+            signed_txn = self.w3.eth.account.sign_transaction(
+                transaction,
+                private_key=doctor_private_key
+            )
+            
+            tx_hash = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
+            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+            
+            if tx_receipt['status'] == 1:
+                return True, f"Patient registration successful! Transaction hash: {tx_hash.hex()}"
+            else:
+                return False, "Transaction failed during execution"
+                
+        except ValueError as ve:
+            return False, f"Invalid input: {str(ve)}"
+        except Exception as e:
+            return False, f"Registration failed: {str(e)}"
