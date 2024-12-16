@@ -1,0 +1,456 @@
+{
+    "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    "abi":[
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "patientAddress",
+                    "type": "address"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "doctorAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "patientAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "isApproved",
+                            "type": "bool"
+                        }
+                    ],
+                    "internalType": "struct AccessRequest",
+                    "name": "request",
+                    "type": "tuple"
+                }
+            ],
+            "name": "addAccessRequest",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "actor",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "actionType",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "medicalRecordID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "details",
+                    "type": "string"
+                }
+            ],
+            "name": "logExternal",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "patientAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "firstName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "lastName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "dateOfBirth",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "gender",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "placeOfBirth",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "CIN",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "phoneNumber",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "emergencyContact",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "medicalRecordID",
+                            "type": "string"
+                        }
+                    ],
+                    "internalType": "struct PatientInput",
+                    "name": "patientInput",
+                    "type": "tuple"
+                }
+            ],
+            "name": "registerPatient",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "requestIndex",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "approval",
+                    "type": "bool"
+                }
+            ],
+            "name": "respondToAccessRequest",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_storageContractAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "setStorageContractAddress",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_doctorContractAddress",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "accessApprovals",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "accessRequests",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "doctorAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "patientAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isApproved",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "doctorContract",
+            "outputs": [
+                {
+                    "internalType": "contract DoctorContract",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "patientAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "isPatientRegistered",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "patients",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "patientAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "firstName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "lastName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "dateOfBirth",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "gender",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "placeOfbirth",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "CIN",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "phoneNumber",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "emergencyContact",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "medicalRecordID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isRegistered",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "storageContractAddress",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "transactionLogs",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "actor",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "actionType",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "medicalRecordID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "timestamp",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "details",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "viewAccessRequests",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "doctorAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "patientAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "isApproved",
+                            "type": "bool"
+                        }
+                    ],
+                    "internalType": "struct AccessRequest[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "viewLogs",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "actor",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "actionType",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "medicalRecordID",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "timestamp",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "details",
+                            "type": "string"
+                        }
+                    ],
+                    "internalType": "struct TransactionLog[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}

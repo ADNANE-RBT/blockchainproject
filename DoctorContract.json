@@ -1,0 +1,454 @@
+{
+    "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "abi":[
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "medicalRecordID",
+                    "type": "string"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "string",
+                            "name": "medicalRecordID",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "description",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string[]",
+                            "name": "activeProblemList",
+                            "type": "string[]"
+                        },
+                        {
+                            "internalType": "string[]",
+                            "name": "medications",
+                            "type": "string[]"
+                        },
+                        {
+                            "internalType": "string[]",
+                            "name": "allergies",
+                            "type": "string[]"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "lastVisitDate",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "lastDoctorVisited",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "upcomingVisitDate",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "upcomingDoctorVisit",
+                            "type": "string"
+                        }
+                    ],
+                    "internalType": "struct MedicalRecordInput",
+                    "name": "recordInput",
+                    "type": "tuple"
+                }
+            ],
+            "name": "editMedicalRecord",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "actor",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "actionType",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "medicalRecordID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "details",
+                    "type": "string"
+                }
+            ],
+            "name": "logExternal",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "firstName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "lastName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "dateOfBirth",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "gender",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "placeOfbirth",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "CIN",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "specialization",
+                    "type": "string"
+                }
+            ],
+            "name": "registerDoctor",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_patientContractAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "setPatientContract",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "doctors",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "doctorAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "firstName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "lastName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "dateOfBirth",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "gender",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "placeOfbirth",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "CIN",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "specialization",
+                    "type": "string"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isRegistered",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "doctorAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "getDoctorDetails",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "doctorAddress",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "firstName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "lastName",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "dateOfBirth",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "gender",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "placeOfbirth",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "CIN",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "specialization",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "isRegistered",
+                            "type": "bool"
+                        }
+                    ],
+                    "internalType": "struct Doctor",
+                    "name": "",
+                    "type": "tuple"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "doctorAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "isRegisteredDoctor",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "name": "medicalRecords",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "patientAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "doctorAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "medicalRecordID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "lastVisitDate",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "lastDoctorVisited",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "upcomingVisitDate",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "upcomingDoctorVisit",
+                    "type": "string"
+                },
+                {
+                    "internalType": "bytes32",
+                    "name": "ipfsFileHash",
+                    "type": "bytes32"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isCreated",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "patientContract",
+            "outputs": [
+                {
+                    "internalType": "contract PatientContract",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "transactionLogs",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "actor",
+                    "type": "address"
+                },
+                {
+                    "internalType": "string",
+                    "name": "actionType",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "medicalRecordID",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "timestamp",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "details",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "viewLogs",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "actor",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "actionType",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "medicalRecordID",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "timestamp",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "details",
+                            "type": "string"
+                        }
+                    ],
+                    "internalType": "struct TransactionLog[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}
