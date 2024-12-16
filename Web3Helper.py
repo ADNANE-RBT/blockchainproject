@@ -270,9 +270,9 @@ class Web3Helper:
             medical_record_input = (
                 str(medical_record_data['medical_record_id']),
                 str(medical_record_data['description']),
-                medical_record_data['active_problem_list'],  # Assuming it's already a list of strings
-                medical_record_data['medications'],          # Assuming it's already a list of strings
-                medical_record_data['allergies'],            # Assuming it's already a list of strings
+                medical_record_data['active_problem_list'],  
+                medical_record_data['medications'],          
+                medical_record_data['allergies'],            
                 str(medical_record_data['last_visit_date']),
                 str(medical_record_data['last_doctor_visited']),
                 str(medical_record_data['upcoming_visit_date']),

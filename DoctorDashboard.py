@@ -603,13 +603,6 @@ def create_addpatient_frame(main_view):
         command=validate_and_register_patient
     ).place(relx=0.50, rely=0.89)
 def create_Consult_frame(main_view):
-    # Clear the previous view
-    for widget in main_view.winfo_children():
-        widget.destroy()
-
-    from tkinter import StringVar, Text
-    from PIL import Image
-    from Web3Helper import Web3Helper  # Import the Web3Helper class
 
     # Web3Helper instance
     web3_helper = Web3Helper()
@@ -653,11 +646,11 @@ def create_Consult_frame(main_view):
         "Date of Birth": StringVar(value=current_record['dateOfBirth']),
         "Place of Birth": StringVar(value=current_record['placeOfBirth']),
         "Description": StringVar(value=current_record['description']),
-        "Weight": StringVar(value="N/A"),  # Add if available in contract
-        "Height": StringVar(value="N/A"),  # Add if available in contract
+        "Weight": StringVar(value="N/A"),  
+        "Height": StringVar(value="N/A"),  
         "Medical Record ID": StringVar(value=current_record['medicalRecordID']),
-        "Medical Insurance": StringVar(value="N/A"),  # Add if available in contract
-        "Status": StringVar(value="Active"),  # Example field
+        "Medical Insurance": StringVar(value="N/A"),  
+        "Status": StringVar(value="Active"),  
         "Active Problems": StringVar(value=", ".join(current_record['activeProblemList'])),
         "Allergies": StringVar(value=", ".join(current_record['allergies'])),
         "Medications": StringVar(value=", ".join(current_record['medications'])),
@@ -686,7 +679,6 @@ def create_Consult_frame(main_view):
             row += 1
 
         if editable:
-            # Add Save and Cancel Buttons
             button_frame = CTkFrame(master=patientsframe, fg_color="#FFFFFF", corner_radius=10)
             button_frame.grid(row=row, column=2, padx=10, pady=10, sticky="w")
 
@@ -703,10 +695,10 @@ def create_Consult_frame(main_view):
             "activeProblemList": patient_data["Active Problems"].get().split(", "),
             "medications": patient_data["Medications"].get().split(", "),
             "allergies": patient_data["Allergies"].get().split(", "),
-            "lastVisitDate": "N/A",  # Add if available
-            "lastDoctorVisited": "N/A",  # Add if available
-            "upcomingVisitDate": "N/A",  # Add if available
-            "upcomingDoctorVisit": "N/A",  # Add if available
+            "lastVisitDate": "N/A", 
+            "lastDoctorVisited": "N/A", 
+            "upcomingVisitDate": "N/A", 
+            "upcomingDoctorVisit": "N/A", 
         }
         success, message = web3_helper.edit_medical_record(
             web3_helper.get_current_private_key(),
@@ -728,7 +720,6 @@ def create_Consult_frame(main_view):
 
     edit_button.configure(command=toggle_edit_mode)
 
-    # Initially display the record in read-only mode
     display_record(editable=False)
 
 
@@ -830,7 +821,6 @@ def create_doctordash_frame(app, current_frame):
     return frame
 
 def create_medical_record_frame(main_view):
-    # Clear the previous view
     for widget in main_view.winfo_children():
         widget.destroy()
     
@@ -871,17 +861,14 @@ def create_medical_record_frame(main_view):
         for _, key in fields:
             entry_widget = record_data.get(key)
             if entry_widget:
-                if isinstance(entry_widget, CTkTextbox):  # Check if it's a CTkTextbox
-                    medical_record[key] = entry_widget.get("1.0", "end").strip()  # Get all text and strip extra whitespace
+                if isinstance(entry_widget, CTkTextbox): 
+                    medical_record[key] = entry_widget.get("1.0", "end").strip()  
                 else:
-                    medical_record[key] = entry_widget.get().strip()  # For CTkEntry
+                    medical_record[key] = entry_widget.get().strip()  
         
         try:
-            # Assuming you have these values from the current session/login
             private_key = web3_helper.get_current_private_key()
-            doctor_address = web3_helper.get_current_user_adress()  # You'll need to implement this
-            
-            # Call the blockchain method to create medical record
+            doctor_address = web3_helper.get_current_user_adress()  
             success, message = web3_helper.create_medical_record(
                 private_key, 
                 doctor_address, 
@@ -900,7 +887,7 @@ def create_medical_record_frame(main_view):
     
     record_data = {}
     for i, (label, key) in enumerate(fields):
-        # Create a section frame for each field
+
         section_frame = CTkFrame(master=record_frame, fg_color="#FFFFFF", corner_radius=10, width=780)
         section_frame.grid(row=i, column=0, padx=10, pady=5, sticky="nsew")
         section_frame.grid_columnconfigure(1, weight=1)
@@ -909,7 +896,7 @@ def create_medical_record_frame(main_view):
         CTkLabel(master=section_frame, text=f"{label}:", font=("Arial Bold", 15), text_color="#0080FF").grid(
             row=0, column=0, padx=10, pady=10, sticky="w")
         
-        # Entry widget
+      
         if key in ["description", "active_problem_list", "medications", "allergies"]:
             entry = CTkTextbox(master=section_frame, height=100, width=500, fg_color="#FFFFFF", 
                                border_color="black", text_color="black", border_width=2)
@@ -923,7 +910,6 @@ def create_medical_record_frame(main_view):
         entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
         record_data[key] = entry
     
-    # Fixed Submit Button
     submit_button = CTkButton(
         master=main_view, 
         text="Create Medical Record", 
@@ -934,7 +920,7 @@ def create_medical_record_frame(main_view):
         text_color="#fff",
         command=submit_medical_record
     )
-    submit_button.place(relx=0.5, rely=0.95, anchor="center")  # Fixed at the bottom
+    submit_button.place(relx=0.5, rely=0.95, anchor="center")  
 
 
 
